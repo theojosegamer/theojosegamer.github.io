@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Mobile-Friendly Melhorado com Toque</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;  /* Preenche a largura da tela */
+      height: auto;  /* Mantém a proporção */
+    }
+  </style>
+</head>
+<body>
+  <canvas id="meuCanvas"></canvas>
+
+  <script>
+    var canvas = document.getElementById('meuCanvas');
+    var ctx = canvas.getContext('2d');
+
+    function ajustarCanvas(){
+        var dpr=window.devicePixelRatio||1;
+
+        canvas.width=window.innerWidth*dpr;
+        canvas.height=window.innerHeight*dpr;
+
+        ctx.scale(dpr, dpr);
+
+        desenharCanvas();
+    }
+
+    function desenharCanvas(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle='lightblue';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle='darkblue';
+        ctx.font='40px Arial';
+        ctx.textAlign='center';
+        ctx.fillText('Canvas Mobile-Friendly', canvas.width/2/ window.devicePixelRatio, 100);
+    }
+
+    var debounceResize;
+    window.addEventListener('resize', function(){
+        clearTimeout(debounceResize);
+        debounceResize=setTimeout(ajustarCanvas, 100);
+    });
+
+    canvas.addEventListener('touchstart', function(event){
+        var touch=event.touches[0];
+        var x=touch.clientX;
+        var y=touch.clientY;
+        desenharCírculo(x, y);
+    });
+
+    canvas.addEventListener('click', function(event){
+        var x=event.clientX;
+        var y=event.clientY;
+        desenharCírculo(x, y);
+    });
+
+    function desenharCírculo(x, y){
+        ctx.fillStyle='red';
+        ctx.beginPath();
+        ctx.arc(x, y, 20, 0, Math.PI*2);
+        ctx.fill();
+    }
+
+    ajustarCanvas();
+  </script>
+</body>
+</html>
